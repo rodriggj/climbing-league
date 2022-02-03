@@ -25,24 +25,9 @@ exports.getAllUsers = async (req, res, next) => {
 //@access   Public
 exports.getUserById = async (req, res, next) => {
     try{
-        if(!user) {
-            res.status(400).json({
-                success: false,
-                message: `User with Id ${req.params.id} not found.`,
-            })
-        } else {
-            res.status(200).json({
-                success: true, 
-                data: user, 
-                msg: `User with id ${req.params.id} was found.`
-            })
-        }
+        res.send("Retrieve a single user")
     } catch (err){
-        res.status(500).json({
-            success: false, 
-            data: err, 
-            msg: 'The id parameter is mal-formed'
-        })
+        res.send(err)
     }
 }
 
@@ -64,5 +49,18 @@ exports.createUser = async (req, res, next) => {
     }
 };
 
-// router.put('/:id', c_users.updateUser);
-// router.delete('/:id', c_users.deleteUser);
+exports.updateUser= async (req, res, next) => {
+    try{
+        res.send('Updates a new User')
+    } catch(err){
+        res.send(err)
+    }
+}
+
+exports.deleteUser = async (req, res, next) => {
+    try{
+        res.send('Deletes a new User')
+    } catch(err){
+        res.send(err)
+    }
+}
