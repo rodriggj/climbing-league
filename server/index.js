@@ -15,7 +15,7 @@ const MODE = process.env.NODE_ENV
 connectDB()
 
 // Middleware
-app.use(express.json())   //replacement for body-parser
+app.use(express.json( { extended: false }))   //replacement for body-parser
 
 // Logger   
 if(process.env.NODE_ENV === 'development') {
