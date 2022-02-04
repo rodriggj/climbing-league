@@ -11,6 +11,7 @@ exports.getAllTeams = async (req, res, next) => {
     }
 }
 
+// This is an example
 exports.getAllTeams = async (req, res, next) => {
     try{
         res.send('Get all Teams')
