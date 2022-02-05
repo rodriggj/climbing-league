@@ -1,4 +1,5 @@
 const User = require('../models/User')
+const bcrypt = require('bcryptjs')
 
 //@desc     Get all Users
 //@route    GET /api/v1/users
@@ -35,19 +36,44 @@ exports.getUserById = async (req, res, next) => {
 // @route     POST /api/v1/users
 // @access    Public
 exports.createUser = async (req, res, next) => {
-    try{
-        const user = await User.create(req.body)
+    let isExistingEmail = req.body.email
+
+    try {
+        let existingUser = await User.findOne({ email: isExistingEmail })
+
+        // Check if existing user
+        if(existingUser){
+            return res.status(400).json({
+                success: false, 
+                msg: 'User with Email already exists.'
+            })
+        } 
+
+        // Create a new user
+        const { firstName, lastName, username, password, email, phone, setter, admin, climber, climber_category, photo } = req.body
+        let newUser = new User( { firstName, lastName, username, password, email, phone, setter, admin, climber, climber_category, photo } )
+
+        // Encrypt the password
+        const saltRounds = 10;
+        const salt = bcrypt.genSaltSync(saltRounds)
+        newUser.password = await bcrypt.hashSync(password, salt)
+
+        // Create the new user with encrypted password
+        await newUser.save()
+
+        // Send a response that new User is created
         res.status(201).json({
             success: true, 
-            data: user
+            msg: 'New user created.', 
+            data: newUser
         })
-    } catch (err) {
-        res.status(404).json({
+    } catch (error) {
+        res.status(500).json({
             success: false, 
-            data: err
+            data: error.name + error.message
         })
     }
-};
+}
 
 exports.updateUser= async (req, res, next) => {
     try{
