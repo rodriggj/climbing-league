@@ -1,14 +1,7 @@
 const express = require('express')
 const router = express.Router()
+const c_auth = require('../controllers/auth')
 
-
-router.get('/', (req, res) => {
-    res.send('Auth route')
-}); 
-
-router.post('/', (req, res) => {
-    res.send('Created Authentication Token')
-}); 
-
+router.get('/', c_auth.authUser)
 
 module.exports = router;
