@@ -6,12 +6,24 @@ const Route = require('../models/Routes')
 //@access   Public
 exports.getAllRoutes = async (req, res, next) => {
     try{
-        res.send('Get all Routes')
+        const routes = await Route.find()
+        res.status(200).json({
+            success: true, 
+            count: routes.length, 
+            data: routes
+        })
     } catch(err){
-        res.send(err)
+        res.status(400).json({
+            success: false, 
+            data: "", 
+            msg: err
+        })
     }
 }
 
+//@desc     Get a single route
+//@route    GET /api/v1/routes/:id
+//@access   Public
 exports.getRoutesById = async (req, res, next) => {
     try{
         res.send('Get Route By Id')
@@ -20,6 +32,9 @@ exports.getRoutesById = async (req, res, next) => {
     }
 }
 
+//@desc     Create a new Route
+//@route    POST /api/v1/routes
+//@access   Private
 exports.createRoute = async (req, res, next) => {
     try{
         let existingRoute = await Route.findOne({ week: req.body.week, route_number: req.body.route_number })
@@ -36,7 +51,8 @@ exports.createRoute = async (req, res, next) => {
             week, 
             route_number, 
             route_point_value, 
-            setter, route_stars, 
+            setter, 
+            route_stars, 
             route_attempts, 
             route_flashed_qy, 
             route_2nd_attempt_qty, 
@@ -50,7 +66,8 @@ exports.createRoute = async (req, res, next) => {
             week, 
             route_number, 
             route_point_value, 
-            setter, route_stars, 
+            setter, 
+            route_stars, 
             route_attempts, 
             route_flashed_qy, 
             route_2nd_attempt_qty, 
