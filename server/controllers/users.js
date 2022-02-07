@@ -55,9 +55,9 @@ exports.createUser = async (req, res, next) => {
         let newUser = new User( { firstName, lastName, username, password, email, phone, setter, admin, climber, climber_category, photo } )
 
         // Encrypt the password
-        const saltRounds = 10;
-        const salt = bcrypt.genSaltSync(saltRounds)
-        newUser.password = await bcrypt.hashSync(password, salt)
+        // const saltRounds = 10;
+        // const salt = bcrypt.genSaltSync(saltRounds)
+        // newUser.password = await bcrypt.hashSync(password, salt)
 
         // Create the new user with encrypted password
         await newUser.save()
@@ -74,7 +74,11 @@ exports.createUser = async (req, res, next) => {
             expiresIn: 360000
         }, (err, token) => {
             if (err) throw err
-            res.json({ token: token })
+            res.status(201).json({
+                user: newUser,
+                token: token
+            })
+            // res.json({ token: token })
         })
 
         // Send a response that new User is created
