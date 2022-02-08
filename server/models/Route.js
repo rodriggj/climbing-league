@@ -5,6 +5,9 @@ const RouteSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId, 
         ref: 'users'
     },
+    route_name: {
+        type: String
+    },
     route_rating: {
         type: String,
         enum : ['-','5.6','5.7','5.8','5.9-','5.9','5.9+','5.10-','5.10','5.10+','5.11-','5.11','5.11+','5.12-','5.12','5.12+','5.13-','5.13','5.13+'],
@@ -23,34 +26,9 @@ const RouteSchema = new mongoose.Schema({
         required: true,
         default: '-'
     },
-    route_point_value: {
-        type: Number, 
-        required: true
-    },
     setter: {
         type: String,
-    },
-    route_stars: {
-        type: Number
-    },
-    route_attempts: {
-        type: Number,
-    }, 
-    route_flashed_qty: {
-        type: Number, 
-    },
-    route_2nd_attempt_qty: {
-        type: Number, 
-    },
-    route_3rd_attempt_qty: {
-        type: Number, 
-    },
-    route_4th_attempt_qty: {
-        type: Number, 
-    },
-    route_5th_attempt_qty: {
-        type: Number, 
-    },
+    }
 }, {timestamps: true})
 
 const Route = mongoose.model('Route', RouteSchema)
