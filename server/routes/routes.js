@@ -96,6 +96,9 @@ router.post('/', [auth, [
     }
 });
 
+//@desc     Create a new Route
+//@route    POST /api/v1/routes
+//@access   Private
 router.put('/:id', async (req, res) => {
     try{
         res.send('Updates a new Route')
