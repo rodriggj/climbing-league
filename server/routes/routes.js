@@ -1,23 +1,28 @@
 const express = require('express')
 const router = express.Router()
+
 const Route = require('../models/Route')
+const User = require('../models/User')
+
+const auth = require('../middleware/auth')
+const { check, validationResult } = require('express-validator/check')
 
 //@desc     Get all Routes
 //@route    GET /api/v1/routes
-//@access   Public
-router.get('/', async (req, res) => {
+//@access   Private
+router.get('/', auth, async (req, res) => {
     try{
-        const routes = await Route.find()
+        const routes = await Route.find( { user: req.user.id }).sort({timestamp: -1})
         res.status(200).json({
             success: true, 
             count: routes.length, 
             data: routes
         })
     } catch(err){
-        res.status(400).json({
+        res.status(500).json({
             success: false, 
-            data: "", 
-            msg: err
+            error: 'Server error', 
+            msg: err.message
         })
     }
 })
@@ -36,7 +41,20 @@ router.get('/:id', async (req, res) => {
 //@desc     Create a new Route
 //@route    POST /api/v1/routes
 //@access   Private
-router.post('/', async (req, res) => {
+router.post('/', [auth, [
+    check('week', 'Week is required.').not().isEmpty(),
+    check('route_number', 'Route number for the specified week is required.').not().isEmpty()
+]], async (req, res) => {
+
+    const errors = validationResult(req)
+
+    if(!errors.isEmpty()){
+        return res.status(400).json({
+            success: 'Failed', 
+            msg: errors.array()
+        })
+    }
+
     try{
         let existingRoute = await Route.findOne({ week: req.body.week, route_number: req.body.route_number })
 
@@ -51,30 +69,16 @@ router.post('/', async (req, res) => {
             route_rating, 
             week, 
             route_number, 
-            route_point_value, 
-            setter, 
-            route_stars, 
-            route_attempts, 
-            route_flashed_qy, 
-            route_2nd_attempt_qty, 
-            route_3rd_attempt_qty,
-            route_4th_attempt_qty,
-            route_5th_attempt_qty
+            setter
          } = req.body
 
+         const user = req.user.id
+
          let newRoute = new Route( { 
+            user,
             route_rating, 
             week, 
-            route_number, 
-            route_point_value, 
-            setter, 
-            route_stars, 
-            route_attempts, 
-            route_flashed_qy, 
-            route_2nd_attempt_qty, 
-            route_3rd_attempt_qty,
-            route_4th_attempt_qty,
-            route_5th_attempt_qty
+            route_number
          } )
 
          await newRoute.save()
